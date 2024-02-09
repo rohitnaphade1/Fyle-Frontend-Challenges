@@ -1,0 +1,67 @@
+<div class="container">
+  <div class="input-section">
+    <label for="username">GitHub Username:</label>
+    <input type="text" id="username" [(ngModel)]="githubUsername" required>
+    <button class="green-button" (click)="getRepositories()">Get Repositories</button>
+  </div>
+
+  <div class="profile-section">
+    <div *ngIf="userProfile">
+      <img [src]="userProfile.avatar_url" alt="User Avatar" class="avatar">
+    </div>
+
+    <div *ngIf="isValidUser"><a href="https://www.github.com/{{githubUsername}}" target="_blank">{{userGithubLink}}</a></div>
+    <div  *ngIf="!isValidUser"></div>
+
+
+    <div *ngIf="isValidUser">
+      <div *ngIf="userProfile">
+        <h2>{{ userProfile.name }}</h2>
+        <p>{{ userProfile.bio }}</p>
+        <p> 📍{{userProfile.location}}</p>
+        <p>Followers {{userProfile.followers}}</p>
+        <p>Following {{userProfile.following}}</p>
+      </div>
+    </div>
+
+    <div *ngIf="!isValidUser">
+      <p>Invalid GitHub username. Please enter a valid username.</p>
+    </div>
+  </div>
+
+  <div class="repo-section" *ngIf="displayRepo" >
+    <ul>
+      <li *ngFor="let repo of repositories" class="repo-card">
+        <a href="https://www.github.com/{{githubUsername}}/{{repo.name}}" target="_blank">{{ repo.name }}</a>
+        <div>{{repo.description}}</div>
+        <div class="languageused">{{repo.language}}</div>
+      </li>    
+    </ul>
+  </div>
+
+
+    <div *ngIf="displayModifiedRepo">
+      <div *ngIf="displayedElements.length > 0">
+        <ul>
+          <li *ngFor="let element of displayedElements" class="repo-card">
+            <a href="https://www.github.com/{{githubUsername}}/{{element.name}}" target="_blank">{{ element.name }}</a>
+            <div>{{element.description}}</div>
+            <div class="languageused">{{element.language}}</div>
+          </li>
+        </ul>
+      
+        <div *ngIf="totalPages > 1">
+          <button (click)="prev()">Previous</button>
+          <span>Page {{ currentPage }} of {{ totalPages }}</span>
+          <button (click)="next()">Next</button>
+        </div>
+      </div>
+    </div>
+  
+  <div *ngIf="modifyrepo">
+    <label for="numberOfElements">Enter number of elements to display:</label>
+    <input type="number" id="numberOfElements" [(ngModel)]="elementsPerPage" min="1">
+    <button (click)="updateDisplayedElements()">Show</button>
+  </div>
+</div>
+
